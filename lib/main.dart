@@ -76,10 +76,10 @@ class _CheckerPageState extends State<CheckerPage> {
 
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
+          children: <Widget> [
             Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
+                children: <Widget> [
               const Text(
                 'Please input a number to see if it is square or triangular.',
                 style: TextStyle(
