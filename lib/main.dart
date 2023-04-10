@@ -3,72 +3,66 @@ import 'package:flutter/services.dart';
 import 'package:flutter_number_checker/flutter_number_checker.dart' as checker;
 
 void main() {
-  runApp(const NumberCheckerApp());
+  runApp(const CheckerApp());
 }
 
-class NumberCheckerApp extends StatelessWidget {
-  const NumberCheckerApp({super.key});
+class CheckerApp extends StatelessWidget {
+  const CheckerApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Number Shapes',
       theme: ThemeData(
         primarySwatch: Colors.blue,
 
       ),
-      home: const NumberCheckerPage(title: 'Currency convertor'),
+      home: const CheckerPage(title: 'Number Shapes'),
     );
   }
 }
 
-class NumberCheckerPage extends StatefulWidget {
-  const NumberCheckerPage({super.key, required this.title});
+class CheckerPage extends StatefulWidget {
+  const CheckerPage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<NumberCheckerPage> createState() => _NumberCheckerPageState();
+  State<CheckerPage> createState() => _CheckerPageState();
 }
 
-class _NumberCheckerPageState extends State<NumberCheckerPage> {
-  String _resultMessage = '';
-  num _resultingNumber = 0;
+class _CheckerPageState extends State<CheckerPage> {
+  String? _alertMessage;
+  String? _alertTitle;
 
   final TextEditingController sumController = TextEditingController();
 
-  void _showResult() {
+  void _calculateResult() {
     setState(() {
       if (sumController.text.isEmpty) {
-        _resultMessage = 'Please enter a number.';
+        _alertMessage = 'Please enter a number.';
       } else {
-        _resultingNumber = int.parse(sumController.text);
-        _resultMessage = "Number $_resultingNumber is neither TRIANGULAR nor SQUARE.";
-        bool isSquare = checker.FlutterNumberChecker.isPerfectSquare(_resultingNumber);
-        bool isTriangle = checker.FlutterNumberChecker.isPerfectCube(_resultingNumber);
+        var number = int.parse(sumController.text);
+        _alertMessage = "Number $number is neither TRIANGULAR nor SQUARE.";
+        bool isSquare = checker.FlutterNumberChecker.isPerfectSquare(number);
+        bool isTriangle = checker.FlutterNumberChecker.isTriangularNumber(number);
         if (isSquare && isTriangle) {
-          _resultMessage = "Number $_resultingNumber is both SQUARE and TRIANGLE.";
+          _alertMessage = "Number $number is both SQUARE and TRIANGULAR.";
         } else {
           if (isSquare) {
-            _resultMessage = "Number $_resultingNumber is SQUARE.";
+            _alertMessage = "Number $number is SQUARE.";
           }
           if (isTriangle) {
-            _resultMessage = "Number $_resultingNumber is TRIANGLE.";
+            _alertMessage = "Number $number is TRIANGULAR.";
           }
         }
+        _alertTitle = number.toString();
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_resultMessage != '') {
-      showDialog(context: context, builder: (_) =>
-          AlertDialog(
-              title: Text(_resultingNumber.toString()),
-              content: Text(_resultMessage)
-          ));
-    }
     return Scaffold(
       appBar: AppBar(
 
@@ -78,29 +72,48 @@ class _NumberCheckerPageState extends State<NumberCheckerPage> {
 
         child: Column(
 
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            const Text(
-                'Please input a number to see if it is square or triangular.'
-            ),
-            TextField(
-              controller: sumController,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^\d+(?:\.\d+)?$')),
-              ],
-            ),
-            TextButton(
-                onPressed: _showResult,
-
-                child: const Text("CONVERT",
-                    style: TextStyle(fontSize: 20))
-            ),
-
-            Text(
-                _resultMessage,
-                style: const TextStyle(fontSize: 25)
+            Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+              const Text(
+                'Please input a number to see if it is square or triangular.',
+                style: TextStyle(
+                    fontSize: 20
+                ),
+              ),
+              TextField(
+                controller: sumController,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d+(?:\.\d+)?$')),
+                ],
+              )
+            ]),
+            IconButton(
+                icon: const Icon(Icons.check_circle),
+                iconSize: 50,
+                color: Colors.blueAccent,
+                onPressed: () {
+                  _calculateResult();
+                  showDialog(context: context, builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text(_alertTitle!),
+                      content: Text(_alertMessage!),
+                      actions: [
+                        TextButton(
+                          child: const Text("Close"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        )
+                      ]
+                    );
+                  });
+                }
             ),
           ],
         ),
