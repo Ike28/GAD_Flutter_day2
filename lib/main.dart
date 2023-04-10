@@ -32,8 +32,8 @@ class CheckerPage extends StatefulWidget {
 }
 
 class _CheckerPageState extends State<CheckerPage> {
-  String? _alertMessage;
-  String? _alertTitle;
+  late String _alertMessage;
+  late String _alertTitle;
 
   final TextEditingController sumController = TextEditingController();
 
@@ -42,18 +42,20 @@ class _CheckerPageState extends State<CheckerPage> {
       if (sumController.text.isEmpty) {
         _alertMessage = 'Please enter a number.';
       } else {
-        var number = int.parse(sumController.text);
-        _alertMessage = "Number $number is neither TRIANGULAR nor SQUARE.";
-        bool isSquare = checker.FlutterNumberChecker.isPerfectSquare(number);
-        bool isTriangle = checker.FlutterNumberChecker.isTriangularNumber(number);
+        final int number = int.parse(sumController.text);
+        _alertMessage = 'Number $number is neither TRIANGULAR nor SQUARE.';
+        final bool isSquare = checker.FlutterNumberChecker
+            .isPerfectSquare(number);
+        final bool isTriangle = checker.FlutterNumberChecker
+            .isTriangularNumber(number);
         if (isSquare && isTriangle) {
-          _alertMessage = "Number $number is both SQUARE and TRIANGULAR.";
+          _alertMessage = 'Number $number is both SQUARE and TRIANGULAR.';
         } else {
           if (isSquare) {
-            _alertMessage = "Number $number is SQUARE.";
+            _alertMessage = 'Number $number is SQUARE.';
           }
           if (isTriangle) {
-            _alertMessage = "Number $number is TRIANGULAR.";
+            _alertMessage = 'Number $number is TRIANGULAR.';
           }
         }
         _alertTitle = number.toString();
@@ -76,9 +78,8 @@ class _CheckerPageState extends State<CheckerPage> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             Column(
-                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: <Widget>[
               const Text(
                 'Please input a number to see if it is square or triangular.',
                 style: TextStyle(
@@ -87,8 +88,9 @@ class _CheckerPageState extends State<CheckerPage> {
               ),
               TextField(
                 controller: sumController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                inputFormatters: [
+                keyboardType: const TextInputType
+                    .numberWithOptions(decimal: true),
+                inputFormatters: <TextInputFormatter> [
                   FilteringTextInputFormatter.allow(RegExp(r'^\d+(?:\.\d+)?$')),
                 ],
               )
@@ -101,11 +103,11 @@ class _CheckerPageState extends State<CheckerPage> {
                   _calculateResult();
                   showDialog(context: context, builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text(_alertTitle!),
-                      content: Text(_alertMessage!),
-                      actions: [
+                      title: Text(_alertTitle),
+                      content: Text(_alertMessage),
+                      actions: <Widget> [
                         TextButton(
-                          child: const Text("Close"),
+                          child: const Text('Close'),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
