@@ -15,7 +15,6 @@ class CheckerApp extends StatelessWidget {
       title: 'Number Shapes',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-
       ),
       home: const CheckerPage(title: 'Number Shapes'),
     );
@@ -44,10 +43,8 @@ class _CheckerPageState extends State<CheckerPage> {
       } else {
         final int number = int.parse(sumController.text);
         _alertMessage = 'Number $number is neither TRIANGULAR nor SQUARE.';
-        final bool isSquare = checker.FlutterNumberChecker
-            .isPerfectSquare(number);
-        final bool isTriangle = checker.FlutterNumberChecker
-            .isTriangularNumber(number);
+        final bool isSquare = checker.FlutterNumberChecker.isPerfectSquare(number);
+        final bool isTriangle = checker.FlutterNumberChecker.isTriangularNumber(number);
         if (isSquare && isTriangle) {
           _alertMessage = 'Number $number is both SQUARE and TRIANGULAR.';
         } else {
@@ -67,30 +64,22 @@ class _CheckerPageState extends State<CheckerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
         title: Center(child: Text(widget.title)),
       ),
       body: Center(
-
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget> [
-            Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget> [
+          children: <Widget>[
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
               const Text(
                 'Please input a number to see if it is square or triangular.',
-                style: TextStyle(
-                    fontSize: 20
-                ),
+                style: TextStyle(fontSize: 20),
               ),
               TextField(
                 controller: sumController,
-                keyboardType: const TextInputType
-                    .numberWithOptions(decimal: true),
-                inputFormatters: <TextInputFormatter> [
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.allow(RegExp(r'^\d+(?:\.\d+)?$')),
                 ],
               )
@@ -101,22 +90,19 @@ class _CheckerPageState extends State<CheckerPage> {
                 color: Colors.blueAccent,
                 onPressed: () {
                   _calculateResult();
-                  showDialog(context: context, builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text(_alertTitle),
-                      content: Text(_alertMessage),
-                      actions: <Widget> [
-                        TextButton(
-                          child: const Text('Close'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        )
-                      ]
-                    );
-                  });
-                }
-            ),
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(title: Text(_alertTitle), content: Text(_alertMessage), actions: <Widget>[
+                          TextButton(
+                            child: const Text('Close'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          )
+                        ]);
+                      });
+                }),
           ],
         ),
       ),
